@@ -10,6 +10,7 @@ morgan.token('body', function (req) {
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
+app.use(express.static('dist'))
 
 const generateId = () => {
     const id = Math.floor(Math.random() * (1500 - persons.length) + persons.length)
@@ -88,7 +89,7 @@ app.post('/api/persons', (request, response) => {
     }
     persons = persons.concat(person)
 
-    response.json(persons)
+    response.json(person)
 })
 
 const PORT = process.env.PORT || 3001
