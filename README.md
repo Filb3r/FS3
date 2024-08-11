@@ -1,3 +1,3 @@
 "# FS3" 
 
-https://fs3.fly.dev/api/persons
+https://fs3.fly.dev/
