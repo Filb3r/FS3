@@ -16,25 +16,25 @@ mongoose.set('strictQuery', false)
 mongoose.connect(url)
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String
+  name: String,
+  number: String
 })
 
 const Person = mongoose.model('Person', personSchema)
 
 const person = new Person({
-    name: personName,
-    number: personNumber  
+  name: personName,
+  number: personNumber
 })
 
 if(process.argv.length === 5){
-    person.save().then(result => {
-        console.log('person saved!')
-        mongoose.connection.close()
-      })
+  person.save().then(() => {
+    console.log('person saved!')
+    mongoose.connection.close()
+  })
 } else if(process.argv.length === 3){
-    Person.find({}).then(people => {
-        console.log(people)
-        mongoose.connection.close()
-    })
+  Person.find({}).then(people => {
+    console.log(people)
+    mongoose.connection.close()
+  })
 }
