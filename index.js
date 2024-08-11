@@ -14,28 +14,6 @@ app.use(express.static('dist'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
 
-let persons = [
-    {
-        id: "1",
-        name: "Arto Hellas",
-        number: "040-123456"  
-    },
-    {
-        id: "2",
-        name: "Ada Lovelace",
-        number: "39-44-5323523"  
-    },
-    {
-        id: "3",
-        name: "Dan abramov",
-        number: "12-34-234345"  
-    },
-    {
-        id: "4",
-        name: "Mary poppendieck",
-        number: "39-23-6423122"  
-    }
-]
 
 app.get('/info', (request, response) => {
     response.send(`<p>phonebook has info for ${persons.length} persons</p>
@@ -73,12 +51,6 @@ app.delete('/api/persons/:id', (request, response, next) => {
 app.post('/api/persons', (request, response, next) => {
     const body = request.body
 
-    if(!body.name || !body.number) {
-        return response.status(400).json({
-            error: 'name or number missing'
-        })
-    }
-
     const person = new Person({
         name: body.name,
         number: body.number,
@@ -91,14 +63,9 @@ app.post('/api/persons', (request, response, next) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-    const body = request.body
+    const {name, number} = request.body
 
-    const person = {
-        name: body.name,
-        number: body.number
-    }
-
-    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    Person.findByIdAndUpdate(request.params.id, {name, number}, { new: true, runValidators: true, context: 'query' })
         .then(updatedPerson => {
             response.json(updatedPerson)
         }) 
@@ -116,6 +83,8 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).send({ error: error.message})
     }
 
     next(error)
@@ -123,7 +92,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })

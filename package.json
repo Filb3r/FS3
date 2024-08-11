@@ -10,7 +10,8 @@
     "build:ui": "@powershell Remove-Item -Recurse -Force dist && cd ../fullstackopen/osa2/puhelinluettelo && npm run build && @powershell Copy-Item -Path ./dist -Destination $HOME/Desktop/fs3/dist -Recurse",
     "deploy": "fly deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
-    "logs:prod": "fly logs"
+    "logs:prod": "fly logs",
+    "lint": "eslint ."
   },
   "author": "vm",
   "license": "ISC",
@@ -22,7 +23,11 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.9.0",
     "@flydotio/dockerfile": "^0.5.8",
+    "@stylistic/eslint-plugin-js": "^2.6.2",
+    "eslint": "^9.9.0",
+    "globals": "^15.9.0",
     "nodemon": "^3.1.4"
   }
 }
